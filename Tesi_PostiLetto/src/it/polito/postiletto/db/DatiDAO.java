@@ -74,7 +74,7 @@ public class DatiDAO {
 			st.setDate(2, Date.valueOf(data));
 			st.setDate(3, Date.valueOf(data));
 			
-			//NON FUNZIONA CORRETTAMENTE LA QUERY AMCHE SE SU HEIDI VA
+			//NON FUNZIONA CORRETTAMENTE LA QUERY ANCHE SE SU HEIDI VA
 			
 			ResultSet rs = st.executeQuery();
 			rs.next();
