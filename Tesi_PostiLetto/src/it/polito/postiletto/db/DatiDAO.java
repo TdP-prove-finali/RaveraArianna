@@ -22,6 +22,7 @@ public class DatiDAO {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			ResultSet res = st.executeQuery();
+			
 
 			while (res.next()) {
 				Dati d = new Dati(res.getDate("accettazione").toLocalDate(), res.getDate("dimissione").toLocalDate(), res.getString("reparto"));
@@ -39,7 +40,6 @@ public class DatiDAO {
 	
 	public int getNMaxPosti(String reparto) {
 		String sql = "SELECT nmax FROM postimassimireparti WHERE reparto=?";
-		int n=0;
 
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -61,25 +61,33 @@ public class DatiDAO {
 		}
 	}
 	
-	public int occupazioneRepartoNovDic(LocalDate data, String reparto) {
-		String sql="SELECT COUNT(*) AS numRighe FROM ricoveri WHERE reparto=? && accettazione<=? && dimissione>=?";
+	public int occupazioneRepartoPrev(LocalDate data, String reparto) {
+		final String sql="SELECT COUNT(*) AS numRighe FROM ricoveri WHERE reparto=? && accettazione<=? && dimissione>=?";
+		
+		Connection conn = DBConnect.getConnection();
+		PreparedStatement st;
+		
 		
 		try {
-			Connection conn = DBConnect.getConnection();
-			PreparedStatement st = conn.prepareStatement(sql);
+			st = conn.prepareStatement(sql);
 
 			st.setString(1, reparto);
 			st.setDate(2, Date.valueOf(data));
 			st.setDate(3, Date.valueOf(data));
 			
-			ResultSet res = st.executeQuery();
+			//NON FUNZIONA CORRETTAMENTE LA QUERY AMCHE SE SU HEIDI VA
+			
+			ResultSet rs = st.executeQuery();
+			rs.next();
 
-			while (res.next()) {
-				return res.getInt("numRighe");
-			}
 
+			System.out.println(rs.getInt("numRighe"));
+			
+			int res= rs.getInt("numRighe");
+
+			System.out.println(Date.valueOf(data)+" "+res+"\n");
 			conn.close();
-			return -1;
+			return  res;
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

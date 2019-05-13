@@ -121,6 +121,7 @@ public class RicoveriController {
     	}
     }
     
+    // finito
     @FXML
     void doEspandiGrafo(MouseEvent event) {
     	
@@ -165,7 +166,7 @@ public class RicoveriController {
         datiTorta = FXCollections.observableArrayList(new PieChart.Data("reparto", 100));
 		torta.setData(datiTorta);
 		
-		LocalDate minDate = LocalDate.of(2018, 11, 1);
+		LocalDate minDate = LocalDate.of(2018, 07, 1);
 		LocalDate maxDate = LocalDate.of(2018, 12, 31);
 		dateInizioPrevisione.setDayCellFactory(d -> new DateCell() {
 			public void updateItem(LocalDate item, boolean empty) {
@@ -178,6 +179,23 @@ public class RicoveriController {
 			public void updateItem(LocalDate item, boolean empty) {
 				super.updateItem(item, empty);
 				setDisable(item.isAfter(maxDate) || item.isBefore(minDate));
+               }
+			}
+		);
+		
+		LocalDate minDa = LocalDate.of(2019, 01, 01);
+		LocalDate maxDa = LocalDate.of(2019, 01, 31);
+		dateInizioRicovero.setDayCellFactory(d -> new DateCell() {
+			public void updateItem(LocalDate item, boolean empty) {
+				super.updateItem(item, empty);
+				setDisable(item.isAfter(maxDa) || item.isBefore(minDa));
+               }
+			}
+		);
+		dateFineRicovero.setDayCellFactory(d -> new DateCell() {
+			public void updateItem(LocalDate item, boolean empty) {
+				super.updateItem(item, empty);
+				setDisable(item.isAfter(maxDa) || item.isBefore(minDa));
                }
 			}
 		);
