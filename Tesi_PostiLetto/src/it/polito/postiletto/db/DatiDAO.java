@@ -67,7 +67,6 @@ public class DatiDAO {
 		Connection conn = DBConnect.getConnection();
 		PreparedStatement st;
 		
-		
 		try {
 			st = conn.prepareStatement(sql);
 
