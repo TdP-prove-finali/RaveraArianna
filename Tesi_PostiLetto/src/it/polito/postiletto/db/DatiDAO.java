@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,21 +72,16 @@ public class DatiDAO {
 			st = conn.prepareStatement(sql);
 
 			st.setString(1, reparto);
-			st.setDate(2, Date.valueOf(data));
-			st.setDate(3, Date.valueOf(data));
 			
-			//NON FUNZIONA CORRETTAMENTE LA QUERY ANCHE SE SU HEIDI VA
-			
+			String laData = data.format(DateTimeFormatter.ISO_DATE) ;
+			st.setString(2, laData );
+			st.setString(3, laData );
 			ResultSet rs = st.executeQuery();
 			rs.next();
-
-
-			System.out.println(rs.getInt("numRighe"));
 			
 			int res= rs.getInt("numRighe");
-
-			System.out.println(Date.valueOf(data)+" "+res+"\n");
 			conn.close();
+
 			return  res;
 
 		} catch (SQLException e) {

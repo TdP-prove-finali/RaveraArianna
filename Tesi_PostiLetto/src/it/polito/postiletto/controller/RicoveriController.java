@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import it.polito.postiletto.model.Model;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -42,6 +45,9 @@ public class RicoveriController {
 
     @FXML
     private ComboBox<String> cbRepartoPrevisione;
+
+    @FXML
+    private Slider alpha;
 
     @FXML
     private Button btnPrevisione;
@@ -96,12 +102,19 @@ public class RicoveriController {
     	LocalDate inizio=dateInizioPrevisione.getValue();
     	LocalDate fine=dateFinePrevisione.getValue();
     	String reparto=cbRepartoPrevisione.getValue();
-    	if(inizio==null||fine==null||reparto==null||reparto==""||fine.isBefore(inizio)) {
-    		txtPrevisione.appendText("Inserire correttamente tutti i dati.\n");
+    	double alfa=alpha.getValue();
+
+		model.creaPrevisioni(reparto, alfa);
+    	
+    	if(alfa==0.0||inizio==null||fine==null||reparto==null||reparto=="") {
+    		txtPrevisione.appendText("Inserire tutti i dati.\n");
+    	}
+    	else if(fine.isBefore(inizio)) {
+    		txtPrevisione.appendText("ATTENZIONE! Date incompatibili tra loro.\n");
     	}
     	else {
     		txtPrevisione.appendText(model.previsione(inizio, fine, reparto));
-    		titoloTorta="Statistiche occupazione reparto di "+reparto.toLowerCase();
+    		titoloTorta="Statistiche occupazione media del reparto di "+reparto.toLowerCase();
     		datiTorta = FXCollections.observableArrayList(new PieChart.Data("Posti occupati", model.datiTortaPrev()), new PieChart.Data("Posti liberi", 100-(model.datiTortaPrev())));
     		torta.setData(datiTorta);
     	}
@@ -112,6 +125,9 @@ public class RicoveriController {
     	LocalDate inizio=dateInizioRicovero.getValue();
     	LocalDate fine=dateFineRicovero.getValue();
     	String reparto=cbRepartoRicovero.getValue();
+    	double alfa=alpha.getValue();
+
+		model.creaPrevisioni(reparto, alfa);
     	
     	if(inizio==null||fine==null||reparto==null||reparto==""||fine.isBefore(inizio)) {
     		txtSimulazione.appendText("Inserire correttamente tutti i dati.\n");
@@ -152,6 +168,7 @@ public class RicoveriController {
         assert dateInizioPrevisione != null : "fx:id=\"dateInizioPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert dateFinePrevisione != null : "fx:id=\"dateFinePrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert cbRepartoPrevisione != null : "fx:id=\"cbRepartoPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert alpha != null : "fx:id=\"alpha\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert btnPrevisione != null : "fx:id=\"btnPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert txtPrevisione != null : "fx:id=\"txtPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert torta != null : "fx:id=\"torta\" was not injected: check your FXML file 'PostiLetto.fxml'.";
@@ -202,7 +219,7 @@ public class RicoveriController {
     }
     
     public void setModel(Model model) {
-		this.model = model;
+		this.model = model; 
 		cbRepartoPrevisione.getItems().addAll("","CARDIOLOGIA","CHIRURGIA","GINECOLOGIA","MEDICINA","NEUROLOGIA","NIDO","ORTOPEDIA","PEDIATRIA","PSICHIATRIA","RIANIMAZIONE","U.T.I.C","UROLOGIA");
 		cbRepartoRicovero.getItems().addAll("","CARDIOLOGIA","CHIRURGIA","GINECOLOGIA","MEDICINA","NEUROLOGIA","NIDO","ORTOPEDIA","PEDIATRIA","PSICHIATRIA","RIANIMAZIONE","U.T.I.C","UROLOGIA");
     }
