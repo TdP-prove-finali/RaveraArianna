@@ -1,13 +1,18 @@
 package it.polito.postiletto.controller;
 
 import java.net.URL;
+
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.postiletto.model.Model;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import it.polito.postiletto.model.Row;
 import javafx.collections.*;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,9 +22,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -51,9 +61,24 @@ public class RicoveriController {
 
     @FXML
     private Button btnPrevisione;
+
+    @FXML
+    private Label labelInfo;
     
     @FXML
-    private TextArea txtPrevisione;
+    private TableView<Row> tabellaP;
+    
+    @FXML
+    private TableColumn<Row, LocalDate> colDataP;
+
+    @FXML
+    private TableColumn<Row, Double> colPrevP;
+
+    @FXML
+    private TableColumn<Row, Integer> colOccP;
+
+    @FXML
+    private TableColumn<Row, Double> colMSDP;
 
     @FXML
     private PieChart torta;
@@ -69,9 +94,30 @@ public class RicoveriController {
 
     @FXML
     private ComboBox<String> cbRepartoRicovero;
+    
+    @FXML
+    private Slider alphaSimulazione;
 
     @FXML
     private Button btnSimulazione;
+
+    @FXML
+    private Label labelInfo1;
+
+    @FXML
+    private TableView<Row> tabellaS;
+
+    @FXML
+    private TableColumn<Row, LocalDate> colDataS;
+
+    @FXML
+    private TableColumn<Row, Double> colPrevS;
+
+    @FXML
+    private TableColumn<Row, Integer> colOccS;
+
+    @FXML
+    private TableColumn<Row, Double> colMSDS;
     
     @FXML
     private TextArea txtSimulazione;
@@ -90,13 +136,24 @@ public class RicoveriController {
     void doCancella(ActionEvent event) {
     	cbRepartoPrevisione.setValue("");
     	cbRepartoRicovero.setValue("");
-    	txtPrevisione.clear();
+    	
     	dateInizioPrevisione.setValue(null);
     	dateFinePrevisione.setValue(null);
     	datiTorta = FXCollections.observableArrayList(new PieChart.Data("reparto", 100));
 		torta.setData(datiTorta);
+		
+		ObservableList<Row> righe=FXCollections.observableArrayList();
+		tabellaP.setItems(righe);
+		
+		labelInfo.setText("");
+		
+    	txtSimulazione.clear();
+    	
+    	dateInizioRicovero.setValue(null);
+    	dateFineRicovero.setValue(null);
     }
 
+    //FINITO
     @FXML
     void doPrevisione(ActionEvent event) {
     	LocalDate inizio=dateInizioPrevisione.getValue();
@@ -107,13 +164,25 @@ public class RicoveriController {
 		model.creaPrevisioni(reparto, alfa);
     	
     	if(alfa==0.0||inizio==null||fine==null||reparto==null||reparto=="") {
-    		txtPrevisione.appendText("Inserire tutti i dati.\n");
+    		labelInfo.setText("ATTENZIONE! Inserire tutti i dati.");
     	}
     	else if(fine.isBefore(inizio)) {
-    		txtPrevisione.appendText("ATTENZIONE! Date incompatibili tra loro.\n");
+    		labelInfo.setText("ATTENZIONE! Inserire le date correttamente.");
     	}
     	else {
-    		txtPrevisione.appendText(model.previsione(inizio, fine, reparto));
+    		
+    		ObservableList<Row> righe=FXCollections.observableArrayList();
+    		for(Row r:model.previsione(inizio, fine, reparto)) {
+    			righe.add(r);
+    		}
+    		
+    		colDataP.setCellValueFactory(new PropertyValueFactory<Row, LocalDate>("data"));
+            colPrevP.setCellValueFactory(new PropertyValueFactory<Row, Double>("previsione"));
+            colOccP.setCellValueFactory(new PropertyValueFactory<Row, Integer>("domanda"));
+            colMSDP.setCellValueFactory(new PropertyValueFactory<Row, Double>("msd"));
+            
+    		tabellaP.setItems(righe);
+    		
     		titoloTorta="Statistiche occupazione media del reparto di "+reparto.toLowerCase();
     		datiTorta = FXCollections.observableArrayList(new PieChart.Data("Posti occupati", model.datiTortaPrev()), new PieChart.Data("Posti liberi", 100-(model.datiTortaPrev())));
     		torta.setData(datiTorta);
@@ -129,15 +198,32 @@ public class RicoveriController {
 
 		model.creaPrevisioni(reparto, alfa);
     	
-    	if(inizio==null||fine==null||reparto==null||reparto==""||fine.isBefore(inizio)) {
-    		txtSimulazione.appendText("Inserire correttamente tutti i dati.\n");
+		if(alfa==0.0||inizio==null||fine==null||reparto==null||reparto=="") {
+    		labelInfo1.setText("ATTENZIONE! Inserire tutti i dati.");
+    	}
+    	else if(fine.isBefore(inizio)) {
+    		labelInfo1.setText("ATTENZIONE! Inserire le date correttamente.");
     	}
     	else {
-    		txtSimulazione.appendText(model.simulazione(inizio, fine, reparto));
+    		
+    		ObservableList<Row> righe=FXCollections.observableArrayList();
+    		for(Row r:model.simulazione(inizio, fine, reparto)) {
+    			righe.add(r);
+    		}
+    		
+    		colDataS.setCellValueFactory(new PropertyValueFactory<Row, LocalDate>("data"));
+            colPrevS.setCellValueFactory(new PropertyValueFactory<Row, Double>("previsione"));
+            colOccS.setCellValueFactory(new PropertyValueFactory<Row, Integer>("domanda"));
+            colMSDS.setCellValueFactory(new PropertyValueFactory<Row, Double>("msd"));
+            
+    		tabellaS.setItems(righe);
+    		
+    		String result=model.doIpotesi(model.simulazione(inizio, fine, reparto), reparto);
+    		txtSimulazione.appendText(result);
     	}
     }
     
-    // finito
+    // FINITO
     @FXML
     void doEspandiGrafo(MouseEvent event) {
     	
@@ -170,16 +256,30 @@ public class RicoveriController {
         assert cbRepartoPrevisione != null : "fx:id=\"cbRepartoPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert alpha != null : "fx:id=\"alpha\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert btnPrevisione != null : "fx:id=\"btnPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
-        assert txtPrevisione != null : "fx:id=\"txtPrevisione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert labelInfo != null : "fx:id=\"labelInfo\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert tabellaP != null : "fx:id=\"tabellaP\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colDataP != null : "fx:id=\"colDataP\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colPrevP != null : "fx:id=\"colPrevP\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colOccP != null : "fx:id=\"colOccP\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colMSDP != null : "fx:id=\"colMSDP\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert torta != null : "fx:id=\"torta\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert tabRicovero != null : "fx:id=\"tabRicovero\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert dateInizioRicovero != null : "fx:id=\"dateInizioRicovero\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert dateFineRicovero != null : "fx:id=\"dateFineRicovero\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert cbRepartoRicovero != null : "fx:id=\"cbRepartoRicovero\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert alphaSimulazione != null : "fx:id=\"alphaSimulazione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert btnSimulazione != null : "fx:id=\"btnSimulazione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert labelInfo1 != null : "fx:id=\"labelInfo1\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert tabellaS != null : "fx:id=\"tabellaS\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colDataS != null : "fx:id=\"colDataS\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colPrevS != null : "fx:id=\"colPrevS\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colOccS != null : "fx:id=\"colOccS\" was not injected: check your FXML file 'PostiLetto.fxml'.";
+        assert colMSDS != null : "fx:id=\"colMSDS\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert txtSimulazione != null : "fx:id=\"txtSimulazione\" was not injected: check your FXML file 'PostiLetto.fxml'.";
         assert btnCancella != null : "fx:id=\"btnCancella\" was not injected: check your FXML file 'PostiLetto.fxml'.";
 
+         
+     	
         datiTorta = FXCollections.observableArrayList(new PieChart.Data("reparto", 100));
 		torta.setData(datiTorta);
 		
