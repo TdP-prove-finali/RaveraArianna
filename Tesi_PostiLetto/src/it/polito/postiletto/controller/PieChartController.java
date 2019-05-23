@@ -10,26 +10,25 @@ import javafx.scene.chart.PieChart.Data;
 
 public class PieChartController {
 
-    @FXML
-    private ResourceBundle resources;
+	@FXML
+	private ResourceBundle resources;
 
-    @FXML
-    private URL location;
+	@FXML
+	private URL location;
 
-    @FXML
-    private PieChart pie;
+	@FXML
+	private PieChart pie;
 
-    
 	private ObservableList<Data> dati;
-	
-    @FXML
-    void initialize() {
-        assert pie != null : "fx:id=\"pie\" was not injected: check your FXML file 'PieChart.fxml'.";
 
-    }
-    
-    public void setDataForPieChart(ObservableList<Data> dati, String titolo) {
-		this.dati=dati;
+	@FXML
+	void initialize() {
+		assert pie != null : "fx:id=\"pie\" was not injected: check your FXML file 'PieChart.fxml'.";
+
+	}
+
+	public void setDataForPieChart(ObservableList<Data> dati, String titolo) {
+		this.dati = dati;
 		this.pie.setData(this.dati);
 		this.pie.setTitle(titolo);
 

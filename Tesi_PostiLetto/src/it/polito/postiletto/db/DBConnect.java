@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DBConnect {
 
-	static private final String jdbcUrl = "jdbc:mysql://localhost/ricoveri?user=root&password=arianna1997&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	static private final String jdbcUrl = "jdbc:mysql://localhost/ricoveri?user=root&password=arianna1997";
 	
 	public static Connection getConnection() {
 

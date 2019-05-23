@@ -204,7 +204,7 @@
                                                 <Insets left="15.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <Label fx:id="txt1" text="Selezionare il numero i giorni di posticipazione" visible="false">
+                                          <Label fx:id="txt1" text="Selezionare il numero di giorni di cui posticipare" visible="false">
                                              <VBox.margin>
                                                 <Insets bottom="2.0" left="20.0" right="10.0" top="10.0" />
                                              </VBox.margin>

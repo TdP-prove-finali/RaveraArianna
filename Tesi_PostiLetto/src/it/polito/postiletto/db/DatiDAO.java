@@ -15,6 +15,8 @@ import it.polito.postiletto.model.Dati;
 
 public class DatiDAO {
 
+	Dati dati;
+	
 	public List<Dati> getListaDati(){
 		String sql = "SELECT accettazione, dimissione, reparto FROM ricoveri";
 		List<Dati> listaDati = new ArrayList<>();
@@ -73,9 +75,9 @@ public class DatiDAO {
 
 			st.setString(1, reparto);
 			
-			String laData = data.format(DateTimeFormatter.ISO_DATE) ;
-			st.setString(2, laData );
-			st.setString(3, laData );
+			//String laData = data.format(DateTimeFormatter.ISO_DATE) ;
+			st.setDate(2, Date.valueOf(data));
+			st.setDate(3, Date.valueOf(data));
 			ResultSet rs = st.executeQuery();
 			rs.next();
 			
