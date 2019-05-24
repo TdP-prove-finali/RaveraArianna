@@ -22,15 +22,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="573.0" prefWidth="643.0" style="-fx-background-color: lightsteelblue; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.postiletto.controller.RicoveriController">
+<BorderPane prefHeight="615.0" prefWidth="643.0" style="-fx-background-color: lightsteelblue; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.postiletto.controller.RicoveriController">
    <center>
       <TabPane style="-fx-background-color: whitesmoke; -fx-border-color: grey;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <tabs>
             <Tab fx:id="tabForecasting" text="Previsione">
                <content>
-                  <AnchorPane prefHeight="448.0" prefWidth="630.0">
+                  <AnchorPane>
                      <children>
-                        <VBox alignment="CENTER" prefHeight="448.0" prefWidth="636.0">
+                        <VBox alignment="CENTER" prefHeight="487.0">
                            <children>
                               <HBox>
                                  <children>
@@ -139,7 +139,7 @@
                               </HBox>
                               <HBox>
                                  <children>
-                                    <LineChart fx:id="grafo" prefHeight="43.0" prefWidth="315.0">
+                                    <LineChart fx:id="grafo" alternativeColumnFillVisible="true" prefHeight="200.0" prefWidth="317.0">
                                       <xAxis>
                                         <CategoryAxis fx:id="giorniGrafo" label="Giorni" side="BOTTOM" />
                                       </xAxis>
@@ -164,7 +164,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <VBox alignment="CENTER">
+                        <VBox alignment="CENTER" prefHeight="486.0" prefWidth="643.0">
                            <children>
                               <HBox>
                                  <children>

@@ -3,6 +3,7 @@ package it.polito.postiletto.controller;
 import java.net.URL;  
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.postiletto.model.Model;
@@ -12,6 +13,8 @@ import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -186,6 +189,7 @@ public class RicoveriController {
 		String reparto = cbRepartoPrevisione.getValue();
 		double alfa = alpha.getValue();
 		XYChart.Series<String, Double> series = new XYChart.Series<>();
+		XYChart.Series<String, Double> series2 = new XYChart.Series<>();
 
 		grafo.getData().clear();
 		tabellaP.getItems().clear();
@@ -222,13 +226,20 @@ public class RicoveriController {
 						new PieChart.Data("Posti occupati", model.datiTortaPrev()),
 						new PieChart.Data("Posti liberi", 100 - (model.datiTortaPrev())));
 			torta.setData(datiTorta);
-
+			
 			// populating the series with data
 			for (Row r : model.previsione(inizio, fine, reparto)) {
-				series.getData()
-						.add(new XYChart.Data<String, Double>(r.getData().getDayOfMonth() + "", r.getPrevisione()));
+				series.getData().add(new XYChart.Data<String, Double>(r.getData().getDayOfMonth() + "", r.getPrevisione()));
 			}
-			grafo.getData().add(series);
+			series.setName("previsione");
+			
+			Map<LocalDate, Integer> domanda=model.occupazioneReparto(inizio, fine, reparto);
+			for (LocalDate d : domanda.keySet()) {
+				series2.getData().add(new XYChart.Data<String, Double>(d.getDayOfMonth() + "", (double)domanda.get(d)));
+			}
+			series2.setName("occupazione reale");
+			grafo.getData().addAll(series, series2);
+       
 		}
 	}
 
