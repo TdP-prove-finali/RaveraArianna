@@ -370,6 +370,8 @@ public class RicoveriController {
 		datiTorta = FXCollections.observableArrayList(new PieChart.Data("reparto", 100));
 		torta.setData(datiTorta);
 
+		dateInizioPrevisione.setValue(LocalDate.of(2018, 07, 1));
+		dateFinePrevisione.setValue(LocalDate.of(2018, 07, 1));
 		LocalDate minDate = LocalDate.of(2018, 07, 1);
 		LocalDate maxDate = LocalDate.of(2018, 12, 31);
 		dateInizioPrevisione.setDayCellFactory(d -> new DateCell() {
@@ -385,6 +387,9 @@ public class RicoveriController {
 			}
 		});
 
+		dateInizioRicovero.setValue(LocalDate.of(2019, 01, 1));
+		dateFineRicovero.setValue(LocalDate.of(2019, 01, 1));
+		
 		LocalDate minDa = LocalDate.of(2019, 01, 01);
 		LocalDate maxDa = LocalDate.of(2019, 01, 31);
 		dateInizioRicovero.setDayCellFactory(d -> new DateCell() {

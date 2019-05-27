@@ -124,7 +124,7 @@
                               </Label>
                               <HBox>
                                  <children>
-                                    <TableView fx:id="tabellaP">
+                                    <TableView fx:id="tabellaP" prefHeight="115.0" prefWidth="602.0">
                                       <columns>
                                         <TableColumn fx:id="colDataP" prefWidth="150.0" text="Data" />
                                         <TableColumn fx:id="colPrevP" prefWidth="150.0" text="Previsione" />
@@ -137,9 +137,9 @@
                                     </TableView>
                                  </children>
                               </HBox>
-                              <HBox>
+                              <HBox prefHeight="217.0" prefWidth="627.0">
                                  <children>
-                                    <LineChart fx:id="grafo" alternativeColumnFillVisible="true" prefHeight="200.0" prefWidth="317.0">
+                                    <LineChart fx:id="grafo" alternativeColumnFillVisible="true" prefHeight="217.0" prefWidth="309.0">
                                       <xAxis>
                                         <CategoryAxis fx:id="giorniGrafo" label="Giorni" side="BOTTOM" />
                                       </xAxis>
