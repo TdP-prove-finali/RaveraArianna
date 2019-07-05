@@ -11,7 +11,45 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dump dei dati della tabella ricoveri.ricoveri: ~3.716 rows (circa)
+
+-- Dump della struttura del database ricoveri
+CREATE DATABASE IF NOT EXISTS `ricoveri` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `ricoveri`;
+
+-- Dump della struttura di tabella ricoveri.postimassimireparti
+CREATE TABLE IF NOT EXISTS `postimassimireparti` (
+  `reparto` varchar(50) NOT NULL,
+  `nmax` int(11) DEFAULT NULL,
+  PRIMARY KEY (`reparto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dump dei dati della tabella ricoveri.postimassimireparti: ~12 rows (circa)
+/*!40000 ALTER TABLE `postimassimireparti` DISABLE KEYS */;
+INSERT IGNORE INTO `postimassimireparti` (`reparto`, `nmax`) VALUES
+	('CARDIOLOGIA', 15),
+	('CHIRURGIA', 55),
+	('GINECOLOGIA', 100),
+	('MEDICINA', 48),
+	('NEUROLOGIA', 30),
+	('NIDO', 15),
+	('ORTOPEDIA', 146),
+	('PEDIATRIA', 10),
+	('PSICHIATRIA', 25),
+	('RIANIMAZIONE', 12),
+	('U.T.I.C.', 15),
+	('UROLOGIA', 45);
+/*!40000 ALTER TABLE `postimassimireparti` ENABLE KEYS */;
+
+-- Dump della struttura di tabella ricoveri.ricoveri
+CREATE TABLE IF NOT EXISTS `ricoveri` (
+  `accettazione` date DEFAULT NULL,
+  `dimissione` date DEFAULT NULL,
+  `reparto` varchar(50) DEFAULT NULL,
+  KEY `Chiave` (`reparto`),
+  CONSTRAINT `Chiave` FOREIGN KEY (`reparto`) REFERENCES `postimassimireparti` (`reparto`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dump dei dati della tabella ricoveri.ricoveri: ~3.792 rows (circa)
 /*!40000 ALTER TABLE `ricoveri` DISABLE KEYS */;
 INSERT IGNORE INTO `ricoveri` (`accettazione`, `dimissione`, `reparto`) VALUES
 	('2018-06-01', '2019-01-12', 'ORTOPEDIA'),
@@ -3730,7 +3768,6 @@ INSERT IGNORE INTO `ricoveri` (`accettazione`, `dimissione`, `reparto`) VALUES
 	('2018-12-31', '2019-01-02', 'PEDIATRIA'),
 	('2018-12-31', '2019-01-02', 'NIDO'),
 	('2018-12-31', '2019-01-01', 'ORTOPEDIA'),
-
 	('2019-01-01', '2019-01-02', 'ORTOPEDIA'),
 	('2019-01-01', '2019-01-02', 'ORTOPEDIA'),
 	('2019-01-01', '2019-01-02', 'ORTOPEDIA'),
